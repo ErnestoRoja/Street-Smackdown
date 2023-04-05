@@ -76,15 +76,19 @@ function preload() {
 
     // Ernesto's assets
     // this.load.spritesheet('ernesto-all',
-    //     'assets/jason-sprite-sheet.png',
+    //     'assets/Ernesto/jason-sprite-sheet.png',
     //     { frameWidth: 150, frameHeight: 200 }
     // );
 
-    // // Jason's assets (147, 162)
-    // this.load.spritesheet('jason-all',
-    //     'assets/jason-sprite-sheet.png',
-    //     { frameWidth: 150, frameHeight: 200 }
-    // );
+    // Jason's assets (147, 162)
+    this.load.spritesheet('jason-all',
+         'assets/Jason/jason-sprite-sheet.png',
+         { frameWidth: 150, frameHeight: 200 }
+    );
+    this.load.spritesheet('jason-all',
+         'assets/Jason/jason-combo-1.png',
+         { frameWidth: 150, frameHeight: 200 }
+    );
 }
 
 function create() {
