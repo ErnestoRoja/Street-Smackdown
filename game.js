@@ -480,6 +480,7 @@ function update() {
                 player2.anims.play('jason-combo-1-right', true);
             }
         }
+
         //  else if (this.v_Key.isDown) {
         //     player2.setVelocityX(0);
         //     if (P2facingLeft) {
@@ -488,6 +489,7 @@ function update() {
         //         player2.anims.play('jason-combo-1-right', true);
         //     }
         // } 
+        
         else if (P2facingLeft) {
             player2.setVelocityX(0);
             player2.anims.play('jason-turn-left');
