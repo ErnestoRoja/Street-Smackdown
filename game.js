@@ -105,6 +105,14 @@ function preload() {
         'assets/Jason/jason-sprite-sheet.png',
         { frameWidth: 150, frameHeight: 200 }
     );
+    this.load.spritesheet('jason-combo-1',
+        'assets/Jason/jason-combo-1.png',
+        { frameWidth: 150, frameHeight: 200 }
+    );
+    this.load.spritesheet('jason-arial-1',
+        'assets/Jason/jason-arial-1.png',
+        { frameWidth: 150, frameHeight: 200 }
+    );
 }
 
 function create() {
@@ -219,50 +227,78 @@ function create() {
     // Jason's animations
     this.anims.create({
         key: 'jason-idle',
-        frames: [{ key: 'jason-all', frame: 4 }],
+        frames: [{ key: 'jason-all', frame: 5 }],
         frameRate: 20,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-run-left',
-        frames: this.anims.generateFrameNumbers('jason-all', { start: 0, end: 2 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNumbers('jason-all', { start: 0, end: 3 }),
+        frameRate: 15,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-run-right',
-        frames: this.anims.generateFrameNumbers('jason-all', { start: 6, end: 8 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNumbers('jason-all', { start: 7, end: 10 }),
+        frameRate: 15,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-turn-left',
-        frames: [{ key: 'jason-all', frame: 3 }],
+        frames: [{ key: 'jason-all', frame: 4 }],
         frameRate: 10,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-turn-right',
-        frames: [{ key: 'jason-all', frame: 5 }],
+        frames: [{ key: 'jason-all', frame: 6 }],
         frameRate: 10,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-up-left',
-        frames: [{ key: 'jason-all', frame: 10 }],
+        frames: [{ key: 'jason-all', frame: 12 }],
         frameRate: 1,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-up-right',
-        frames: [{ key: 'jason-all', frame: 9 }],
+        frames: [{ key: 'jason-all', frame: 11 }],
         frameRate: 1,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'jason-combo-1-left',
+        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 3, end: 0}),
+        frameRate: 20,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'jason-combo-1-right',
+        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 4, end: 7}),
+        frameRate: 20,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'jason-arial-1-left',
+        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 0, end: 2}),
+        frameRate: 15,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'jason-arial-1-right',
+        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 3, end: 5}),
+        frameRate: 15,
         repeat: -1
     });
 
@@ -436,21 +472,25 @@ function update() {
             player2.anims.play('jason-run-right', true);
             P2facingRight = true;
             P2facingLeft = false;
-        // } else if (this.k_Key.isDown) {
+        } else if (this.c_Key.isDown) {
+            player2.setVelocityX(0);
+            if (P2facingLeft) {
+                player2.anims.play('jason-combo-1-left', true);
+            } else {
+                player2.anims.play('jason-combo-1-right', true);
+            }
+        }
+
+        //  else if (this.v_Key.isDown) {
         //     player2.setVelocityX(0);
-        //     if (facingLeft) {
-        //         player2.anims.play('ernesto-combo-2-left', true);
+        //     if (P2facingLeft) {
+        //         player2.anims.play('jason-combo-1-left', true);
         //     } else {
-        //         player2.anims.play('ernesto-combo-2-right', true);
+        //         player2.anims.play('jason-combo-1-right', true);
         //     }
-        // } else if (this.l_Key.isDown) {
-        //     player2.setVelocityX(0);
-        //     if (facingLeft) {
-        //         player2.anims.play('ernesto-combo-1-left', true);
-        //     } else {
-        //         player2.anims.play('ernesto-combo-1-right', true);
-        //     }
-        } else if (P2facingLeft) {
+        // } 
+        
+        else if (P2facingLeft) {
             player2.setVelocityX(0);
             player2.anims.play('jason-turn-left');
         } else if (P2facingRight) {
@@ -463,15 +503,21 @@ function update() {
     } else {
         isP2Jumping = true;
 
-        if (player2.body.velocity.x < 0) {
-            if (player2.body.velocity.y > 0) {
-                player2.anims.play('jason-up-right', true);
+        if (this.c_Key.isDown) {
+            if (P2facingLeft) {
+                player2.anims.play('jason-arial-1-left', true);
+            } else {
+                player2.anims.play('jason-arial-1-right', true);
+            }
+        } else if (player2.body.velocity.x < 0) {
+            if (this.c_Key.isDown) {
+                player2.anims.play('jason-arial-1-right', true);
             } else {
                 player2.anims.play('jason-up-right', true);
             }
         } else if (player2.body.velocity.x > 0) {
-            if (player2.body.velocity.y > 0) {
-                player2.anims.play('jason-up-left', true);
+            if (this.c_Key.isDown) {
+                player2.anims.play('jason-arial-1-left', true);
             } else {
                 player2.anims.play('jason-up-left', true);
             }
