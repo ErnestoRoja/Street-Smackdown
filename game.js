@@ -17,7 +17,8 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-let player1, player2, platforms, cursors, isP1Jumping, isP2Jumping;
+let player1, player2, platforms, cursors, isP1Jumping, isP2Jumping, rectangleP1M, rectangleP2M, rectangleP1A, rectangleP2A;
+var container;
 
 
 function preload() {
@@ -135,16 +136,37 @@ function create() {
     platforms = this.physics.add.staticGroup();
     let platform = platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
 
-    player1 = this.physics.add.sprite(400, 100, 'ernesto-all').setScale(1);
+    player1 = this.physics.add.sprite(400, 700, 'ernesto-all').setScale(1);
     player1.setCollideWorldBounds(true);
 
-    player2 = this.physics.add.sprite(800, 100, 'jason-all').setScale(1);
+    player2 = this.physics.add.sprite(800, 700, 'jason-all').setScale(1);
     player2.setCollideWorldBounds(true);
+
+    // player1.setSize(32, 32);
+    // player2.setSize(64, 64);
+
+    rectangleP1M = this.add.rectangle(player1.x, player1.y, 150, 200);
+    rectangleP1M.setOrigin(0.5);
+    rectangleP1M.setStrokeStyle(1, 0xFF0000);
+    this.physics.add.existing(rectangleP1M);
+
+    rectangleP2M = this.add.rectangle(player2.x, player2.y, 90, 200);
+    rectangleP2M.setOrigin(0.5);
+    rectangleP2M.setStrokeStyle(1, 0xFF0000);
+    this.physics.add.existing(rectangleP2M);
+
+    cursors = this.input.keyboard.createCursorKeys();
 
     this.physics.add.collider(player1, platforms);
     this.physics.add.collider(player2, platforms);
     this.physics.add.collider(player1, player2);
-    cursors = this.input.keyboard.createCursorKeys();
+    this.physics.add.collider(rectangleP1M, platforms);
+    this.physics.add.collider(rectangleP2M, platforms);
+    this.physics.add.collider(rectangleP1M, rectangleP2M);
+
+    this.physics.add.overlap(rectangleP1M, rectangleP2M, function () {
+        console.log('Kisses detected!');
+    });
 
     // Ernesto's animations
     this.anims.create({
@@ -205,7 +227,7 @@ function create() {
 
     this.anims.create({
         key: 'ernesto-combo-1-right',
-        frames: this.anims.generateFrameNumbers('ernesto-combo-1-right', { start: 13, end: 0}),
+        frames: this.anims.generateFrameNumbers('ernesto-combo-1-right', { start: 13, end: 0 }),
         frameRate: 10,
         repeat: -1
     });
@@ -276,28 +298,28 @@ function create() {
 
     this.anims.create({
         key: 'jason-combo-1-left',
-        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 3, end: 0}),
+        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 3, end: 0 }),
         frameRate: 20,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-combo-1-right',
-        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 4, end: 7}),
+        frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 4, end: 7 }),
         frameRate: 20,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-arial-1-left',
-        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 0, end: 2}),
+        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 0, end: 2 }),
         frameRate: 15,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-arial-1-right',
-        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 3, end: 5}),
+        frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 3, end: 5 }),
         frameRate: 15,
         repeat: -1
     });
@@ -387,14 +409,31 @@ function create() {
 }
 
 var P1facingLeft, P1facingRight, P2facingLeft, P2facingRight;
+var isK_Pressed;
+let isKeyPressed = false;
+
 
 function update() {
-
+    isK_Pressed = false;
+    rectangleP1M.x = player1.x;
+    rectangleP1M.y = player1.y;
+    rectangleP1M.displayWidth = 150;
     // Player 1 logic
+
+    // this.k_Key.on('down', () => {
+    //     // Start the animation
+    //     player1.setVelocityX(0);
+    //     if (P1facingLeft) {
+    //         rectangleP1M.displayWidth = 380;
+    //         player1.anims.play('ernesto-combo-2-left', true);
+    //     } else {
+    //         rectangleP1M.displayWidth = 380;
+    //         player1.anims.play('ernesto-combo-2-right', true);
+    //     }
+    // });
 
     if (player1.body.touching.down) {
         isP1Jumping = false;
-        
         if (cursors.left.isDown) {
             player1.setVelocityX(-220);
             player1.anims.play('ernesto-run-left', true);
@@ -408,15 +447,20 @@ function update() {
         } else if (this.k_Key.isDown) {
             player1.setVelocityX(0);
             if (P1facingLeft) {
+                rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-2-left', true);
             } else {
+                rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-2-right', true);
             }
-        } else if (this.l_Key.isDown) {
+        }
+        else if (this.l_Key.isDown) {
             player1.setVelocityX(0);
             if (P1facingLeft) {
+                rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-1-left', true);
             } else {
+                rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-1-right', true);
             }
         } else if (P1facingLeft) {
@@ -431,7 +475,6 @@ function update() {
         }
     } else {
         isP1Jumping = true;
-
         if (player1.body.velocity.x < 0) {
             if (player1.body.velocity.y > 0) {
                 player1.anims.play('ernesto-up-right', true);
@@ -458,16 +501,24 @@ function update() {
     }
 
     // Player 2 logic
+    rectangleP2M.x = player2.x;
+    rectangleP2M.y = player2.y;
+    rectangleP2M.displayWidth = 90;
+    //rectangleP2M.displayWidth = 150;
 
     if (player2.body.touching.down) {
         isP2Jumping = false;
-        
+
         if (this.a_Key.isDown) {
+            rectangleP2M.setOrigin(0.5, 0.5);
+            rectangleP2M.displayWidth = 110;
             player2.setVelocityX(-220);
             player2.anims.play('jason-run-left', true);
             P2facingLeft = true;
             P2facingRight = false;
         } else if (this.d_Key.isDown) {
+            rectangleP2M.setOrigin(0.5, 0.5);
+            rectangleP2M.displayWidth = 110;
             player2.setVelocityX(220);
             player2.anims.play('jason-run-right', true);
             P2facingRight = true;
@@ -475,8 +526,10 @@ function update() {
         } else if (this.c_Key.isDown) {
             player2.setVelocityX(0);
             if (P2facingLeft) {
+                // rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-combo-1-left', true);
             } else {
+                // rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-combo-1-right', true);
             }
         }
@@ -489,11 +542,15 @@ function update() {
         //         player2.anims.play('jason-combo-1-right', true);
         //     }
         // } 
-        
+
         else if (P2facingLeft) {
+            rectangleP2M.setOrigin(0.3, 0.5);
+            rectangleP2M.displayWidth = 90;
             player2.setVelocityX(0);
             player2.anims.play('jason-turn-left');
         } else if (P2facingRight) {
+            rectangleP2M.setOrigin(0.7, 0.5);
+            rectangleP2M.displayWidth = 90;
             player2.setVelocityX(0);
             player2.anims.play('jason-turn-right');
         } else {
@@ -502,7 +559,7 @@ function update() {
         }
     } else {
         isP2Jumping = true;
-
+        rectangleP2M.displayWidth = 110;
         if (this.c_Key.isDown) {
             if (P2facingLeft) {
                 player2.anims.play('jason-arial-1-left', true);
@@ -533,6 +590,7 @@ function update() {
         player2.setVelocityY(-540);
         isP2Jumping = true;
     }
+
 
     // ----------------------------------------------------
 
