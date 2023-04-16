@@ -127,6 +127,8 @@ function preload() {
 }
 
 var redHealth, emptyBar, player1Health, player2Health;
+var boolJasonCombo1, boolJasonArial1;
+var boolErnestoCombo1, boolErnestoCombo2;
 
 function takeDamage(playerBar, amount) {
     if (playerBar == player1_redBar) {
@@ -139,80 +141,7 @@ function takeDamage(playerBar, amount) {
 }
 
 function create() {
-    // Attack Keybinds (Player 1)
-    this.k_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-    this.l_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
-
-    // Attack Keybinds (Player 2)
-    this.c_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-    this.v_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
-
-    // Move Keybinds (Player 2)
-    this.w_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    this.a_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    this.s_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    this.d_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-    this.add.image(945, 475, 'city');
-
-    platforms = this.physics.add.staticGroup();
-    let platform = platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
-
-    player1 = this.physics.add.sprite(400, 700, 'ernesto-all').setScale(1);
-    player1.setCollideWorldBounds(true);
-
-    player2 = this.physics.add.sprite(800, 700, 'jason-idle').setScale(1);
-    player2.setCollideWorldBounds(true);
-
-    player1_emptyBar = this.add.sprite(450, 100, 'empty-health');
-    player1_emptyBar.displayHeight = 60;
-    player1_emptyBar.displayWidth = 800;
-
-    player1_redBar = this.add.sprite(450, 100, 'red-health');
-    player1_redBar.displayHeight = 50;
-    player1_redBar.displayWidth = 785;
-
-    player1_redBar.setCrop(0, 0, 485, 84);
-    player1Health = 485;
-
-    player2_emptyBar = this.add.sprite(1435, 100, 'empty-health');
-    player2_emptyBar.displayHeight = 60;
-    player2_emptyBar.displayWidth = 800;
-
-    player2_redBar = this.add.sprite(1435, 100, 'red-health');
-    player2_redBar.displayHeight = 50;
-    player2_redBar.displayWidth = 785;
-
-    player2_redBar.setCrop(0, 0, 485, 84);
-    player2Health = 485;
-
     
-    
-    // player1.setSize(32, 32);
-    // player2.setSize(64, 64);
-
-    rectangleP1M = this.add.rectangle(player1.x, player1.y, 150, 200);
-    rectangleP1M.setOrigin(0.5);
-    rectangleP1M.setStrokeStyle(1, 0xFF0000);
-    this.physics.add.existing(rectangleP1M);
-
-    rectangleP2M = this.add.rectangle(player2.x, player2.y, 90, 200);
-    rectangleP2M.setOrigin(0.5);
-    rectangleP2M.setStrokeStyle(1, 0xFF0000);
-    this.physics.add.existing(rectangleP2M);
-
-    cursors = this.input.keyboard.createCursorKeys();
-
-    this.physics.add.collider(player1, platforms);
-    this.physics.add.collider(player2, platforms);
-    this.physics.add.collider(player1, player2);
-    this.physics.add.collider(rectangleP1M, platforms);
-    this.physics.add.collider(rectangleP2M, platforms);
-
-    this.physics.add.overlap(rectangleP1M, rectangleP2M, function () {
-        console.log('Kisses detected!');
-    });
-
     // Ernesto's animations
     this.anims.create({
         key: 'ernesto-idle',
@@ -344,28 +273,28 @@ function create() {
     this.anims.create({
         key: 'jason-combo-1-left',
         frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 3, end: 0 }),
-        frameRate: 12,
+        frameRate: 15,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-combo-1-right',
         frames: this.anims.generateFrameNumbers('jason-combo-1', { start: 4, end: 7 }),
-        frameRate: 1,
+        frameRate: 15,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-arial-1-left',
         frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 0, end: 2 }),
-        frameRate: 15,
+        frameRate: 10,
         repeat: -1
     });
 
     this.anims.create({
         key: 'jason-arial-1-right',
         frames: this.anims.generateFrameNumbers('jason-arial-1', { start: 3, end: 5 }),
-        frameRate: 15,
+        frameRate: 10,
         repeat: -1
     });
 
@@ -451,20 +380,152 @@ function create() {
         frameRate: 10,
         repeat: -1
     });
+
+    // Attack Keybinds (Player 1)
+    this.k_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+    this.l_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+
+    // Attack Keybinds (Player 2)
+    this.c_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+    this.v_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+
+    // Move Keybinds (Player 2)
+    this.w_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.a_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.s_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.d_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+
+    this.add.image(945, 475, 'city');
+
+    platforms = this.physics.add.staticGroup();
+    let platform = platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
+
+    player1 = this.physics.add.sprite(400, 700, 'ernesto-all').setScale(1);
+    player1.setCollideWorldBounds(true);
+
+    player2 = this.physics.add.sprite(800, 700, 'jason-idle').setScale(1);
+    player2.setCollideWorldBounds(true);
+
+    player1_emptyBar = this.add.sprite(450, 100, 'empty-health');
+    player1_emptyBar.displayHeight = 60;
+    player1_emptyBar.displayWidth = 800;
+
+    player1_redBar = this.add.sprite(450, 100, 'red-health');
+    player1_redBar.displayHeight = 50;
+    player1_redBar.displayWidth = 785;
+
+    player1_redBar.setCrop(0, 0, 485, 84);
+    player1Health = 485;
+
+    player2_emptyBar = this.add.sprite(1435, 100, 'empty-health');
+    player2_emptyBar.displayHeight = 60;
+    player2_emptyBar.displayWidth = 800;
+
+    player2_redBar = this.add.sprite(1435, 100, 'red-health');
+    player2_redBar.displayHeight = 50;
+    player2_redBar.displayWidth = 785;
+
+    player2_redBar.setCrop(0, 0, 485, 84);
+    player2Health = 485;
+
+    
+    
+    // player1.setSize(32, 32);
+    // player2.setSize(64, 64);
+
+    rectangleP1M = this.add.rectangle(player1.x, player1.y, 150, 200);
+    rectangleP1M.setOrigin(0.5);
+    rectangleP1M.setStrokeStyle(1, 0xFF0000);
+    this.physics.add.existing(rectangleP1M);
+
+    rectangleP2M = this.add.rectangle(player2.x, player2.y, 90, 200);
+    rectangleP2M.setOrigin(0.5);
+    rectangleP2M.setStrokeStyle(1, 0xFF0000);
+    this.physics.add.existing(rectangleP2M);
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    this.physics.add.collider(player1, platforms);
+    this.physics.add.collider(player2, platforms);
+    this.physics.add.collider(player1, player2);
+    this.physics.add.collider(rectangleP1M, platforms);
+    this.physics.add.collider(rectangleP2M, platforms);
+
+    this.physics.add.overlap(rectangleP1M, rectangleP2M, function () {
+        console.log('Kisses detected!');
+    });
+
+    // Ernesto Combo1 Hitbox
+    rectErnestoCombo1 = this.add.rectangle(player1.x, player1.y, 175, 190);
+    rectErnestoCombo1.setOrigin(0.15, 0.5);
+    rectErnestoCombo1.setStrokeStyle(1, 0x0000FF);
+    this.physics.add.existing(rectErnestoCombo1);
+    rectErnestoCombo1.body.allowGravity = false;
+
+    boolErnestoCombo1 = false;
+    this.physics.add.overlap(rectErnestoCombo1, rectangleP2M, function () {
+        boolErnestoCombo1 = true;
+    });
+
+    // Ernesto Combo2 Hitbox
+    rectErnestoCombo2 = this.add.rectangle(player1.x, player1.y, 175, 85);
+    rectErnestoCombo2.setOrigin(0, 0.7);
+    rectErnestoCombo2.setStrokeStyle(1, 0x0000FF);
+    this.physics.add.existing(rectErnestoCombo2);
+    rectErnestoCombo2.body.allowGravity = false;
+
+    boolErnestoCombo2 = false;
+    this.physics.add.overlap(rectErnestoCombo2, rectangleP2M, function () {
+        boolErnestoCombo2 = true;
+    });
+
+    // Jason Combo1 Hitbox
+    rectJasonCombo1 = this.add.rectangle(player2.x, player2.y, 80, 40);
+    rectJasonCombo1.setOrigin(1.1,0.6);
+    rectJasonCombo1.setStrokeStyle(1, 0x0000FF);
+    this.physics.add.existing(rectJasonCombo1);
+    rectJasonCombo1.body.allowGravity = false;
+
+    boolJasonCombo1 = false;
+    this.physics.add.overlap(rectJasonCombo1, rectangleP1M, function () {
+        boolJasonCombo1 = true;
+    });
+
+    // Jason Arial1 Hitbox
+    rectJasonArial1 = this.add.rectangle(player2.x, player2.y, 100, 60);
+    rectJasonArial1.setOrigin(0.9,-0.2);
+    rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+    this.physics.add.existing(rectJasonArial1);
+    rectJasonArial1.body.allowGravity = false;
+
+    boolJasonArial1 = false;
+    this.physics.add.overlap(rectJasonArial1, rectangleP1M, function () {
+        boolJasonArial1 = true;
+    });
+
 }
 
 var P1facingLeft, P1facingRight, P2facingLeft, P2facingRight;
-var isK_Pressed;
-let isKeyPressed = false;
-
 
 function update() {
-    isK_Pressed = false;
+
+    // Player 1 Logic
+
+    // Hitbox
     rectangleP1M.x = player1.x;
     rectangleP1M.y = player1.y;
     rectangleP1M.displayWidth = 150;
-    P1_K_animation = false;
-    // Player 1 logic
+
+    // Combo1 Hitbox
+    rectErnestoCombo1.x = player1.x;
+    rectErnestoCombo1.y = player1.y;
+    rectErnestoCombo1.setStrokeStyle(0, 0x0000FF);
+
+    // Combo2 Hitbox
+    rectErnestoCombo2.x = player1.x;
+    rectErnestoCombo2.y = player1.y;
+    rectErnestoCombo2.setStrokeStyle(0, 0x0000FF);
+
     if (player1.body.touching.down) {
         isP1Jumping = false;
         if (cursors.left.isDown) {
@@ -479,22 +540,56 @@ function update() {
             P1facingLeft = false;
         } else if (this.k_Key.isDown) {
             player1.setVelocityX(0);
+            rectErnestoCombo2.setStrokeStyle(1, 0x0000FF);
             if (P1facingLeft) {
+                rectErnestoCombo2.setOrigin(1, 0.7);
                 rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-2-left', true);
+                if (player1.anims.currentFrame.index == 3 && boolErnestoCombo2) {
+                    console.log('Sword (lol) detected!');
+                    takeDamage(player2_redBar, 5);
+                    boolErnestoCombo2 = false;
+                    player2.setVelocityX(-500);
+                    player2.setVelocityY(-70);
+                }
             } else {
+                rectErnestoCombo2.setOrigin(0, 0.7);
                 rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-2-right', true);
+                if (player1.anims.currentFrame.index == 3 && boolErnestoCombo2) {
+                    console.log('Sword (lol) detected!');
+                    takeDamage(player2_redBar, 5);
+                    boolErnestoCombo2 = false;
+                    player2.setVelocityX(500);
+                    player2.setVelocityY(-70);
+                }
             }
         }
         else if (this.l_Key.isDown) {
             player1.setVelocityX(0);
+            rectErnestoCombo1.setStrokeStyle(1, 0x0000FF);
             if (P1facingLeft) {
+                rectErnestoCombo1.setOrigin(0.85, 0.5);
                 rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-1-left', true);
+                if (player1.anims.currentFrame.index == 9 && boolErnestoCombo1) {
+                    console.log('Sword (lol) detected!');
+                    takeDamage(player2_redBar, 15);
+                    boolErnestoCombo1 = false;
+                    player2.setVelocityX(-1200);
+                    player2.setVelocityY(-100);
+                }
             } else {
+                rectErnestoCombo1.setOrigin(0.15, 0.5);
                 rectangleP1M.displayWidth = 380;
                 player1.anims.play('ernesto-combo-1-right', true);
+                if (player1.anims.currentFrame.index == 9 && boolErnestoCombo1) {
+                    console.log('Sword (lol) detected!');
+                    takeDamage(player2_redBar, 15);
+                    boolErnestoCombo1 = false;
+                    player2.setVelocityX(1200);
+                    player2.setVelocityY(-100);
+                }
             }
         } else if (P1facingLeft) {
             player1.setVelocityX(0);
@@ -529,15 +624,27 @@ function update() {
     }
 
     if (cursors.up.isDown && !isP1Jumping) {
-        player1.setVelocityY(-540);
+        player1.setVelocityY(-1000);
         isP1Jumping = true;
     }
 
-    // Player 2 logic
+    // Player 2 Logic //
+
+    // Hitbox
     rectangleP2M.x = player2.x;
     rectangleP2M.y = player2.y;
     rectangleP2M.displayWidth = 100;
     //rectangleP2M.displayWidth = 150;
+
+    // Combo1 Hitbox
+    rectJasonCombo1.x = player2.x;
+    rectJasonCombo1.y = player2.y;
+    rectJasonCombo1.setStrokeStyle(0, 0x0000FF);
+
+    // Arial1 Hitbox
+    rectJasonArial1.x = player2.x;
+    rectJasonArial1.y = player2.y;
+    rectJasonArial1.setStrokeStyle(0, 0x0000FF);
 
     if (player2.body.touching.down) {
         isP2Jumping = false;
@@ -555,30 +662,33 @@ function update() {
             P2facingRight = true;
             P2facingLeft = false;
         } else if (this.c_Key.isDown) {
+            rectJasonCombo1.setStrokeStyle(1, 0x0000FF);
             rectangleP2M.displayWidth = 170;
             player2.setVelocityX(0);
             if (P2facingLeft) {
+                rectJasonCombo1.setOrigin(1.1,0.6);
                 rectangleP2M.displayWidth = 170;
                 player2.anims.play('jason-combo-1-left', true);
-                if (player2.anims.currentFrame.index == 4) {
-                    takeDamage(player1_redBar, 2);
+                if (player2.anims.currentFrame.index == 4 && boolJasonCombo1) {
+                    console.log('Punches detected!');
+                    takeDamage(player1_redBar, 7);
+                    boolJasonCombo1 = false;
+                    player1.setVelocityX(-500);
+                    player1.setVelocityY(-70);
                 }
             } else {
+                rectJasonCombo1.setOrigin(-0.1,0.6);
                 rectangleP2M.displayWidth = 170;
                 player2.anims.play('jason-combo-1-right', true);
+                if (player2.anims.currentFrame.index == 4 && boolJasonCombo1) {
+                    console.log('Punches detected!');
+                    takeDamage(player1_redBar, 7);
+                    boolJasonCombo1 = false;
+                    player1.setVelocityX(500);
+                    player1.setVelocityY(-70);
+                }
             }
-        }
-
-        //  else if (this.v_Key.isDown) {
-        //     player2.setVelocityX(0);
-        //     if (P2facingLeft) {
-        //         player2.anims.play('jason-combo-1-left', true);
-        //     } else {
-        //         player2.anims.play('jason-combo-1-right', true);
-        //     }
-        // } 
-
-        else if (P2facingLeft) {
+        } else if (P2facingLeft) {
             rectangleP2M.displayWidth = 100;
             player2.setVelocityX(0);
             player2.anims.play('jason-turn-left');
@@ -595,24 +705,59 @@ function update() {
         isP2Jumping = true;
         rectangleP2M.displayWidth = 100;
         if (this.c_Key.isDown) {
+            rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+            rectangleP2M.displayWidth = 150;
             if (P2facingLeft) {
-                rectangleP2M.displayWidth = 150;
+                rectJasonArial1.setOrigin(0.9,-0.2);
                 player2.anims.play('jason-arial-1-left', true);
+                if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
+                    console.log('Kicks detected!');
+                    takeDamage(player1_redBar, 8);
+                    boolJasonArial1 = false;
+                    player1.setVelocityX(-600);
+                    player1.setVelocityY(-100);
+                }
             } else {
+                rectJasonArial1.setOrigin(0.1,-0.2);
                 player2.anims.play('jason-arial-1-right', true);
+                if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
+                    console.log('Kicks detected!');
+                    takeDamage(player1_redBar, 8);
+                    boolJasonArial1 = false;
+                    player1.setVelocityX(600);
+                    player1.setVelocityY(-100);
+                }
             }
         } else if (player2.body.velocity.x < 0) {
             if (this.c_Key.isDown) {
+                rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+                rectJasonArial1.setOrigin(0.1,-0.2);
                 rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-arial-1-right', true);
+                if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
+                    console.log('Kicks detected!');
+                    takeDamage(player1_redBar, 8);
+                    boolJasonArial1 = false;
+                    player1.setVelocityX(600);
+                    player1.setVelocityY(-100);
+                }
             } else {
                 rectangleP2M.displayWidth = 120;
                 player2.anims.play('jason-up-right', true);
             }
         } else if (player2.body.velocity.x > 0) {
             if (this.c_Key.isDown) {
+                rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+                rectJasonArial1.setOrigin(0.9,-0.2);
                 rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-arial-1-left', true);
+                if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
+                    console.log('Kicks detected!');
+                    takeDamage(player1_redBar, 8);
+                    boolJasonArial1 = false;
+                    player1.setVelocityX(-600);
+                    player1.setVelocityY(-100);
+                }
             } else {
                 rectangleP2M.displayWidth = 120;
                 player2.anims.play('jason-up-left', true);
@@ -626,7 +771,7 @@ function update() {
     }
 
     if (this.w_Key.isDown && !isP2Jumping) {
-        player2.setVelocityY(-540);
+        player2.setVelocityY(-1000);
         isP2Jumping = true;
     }
 
