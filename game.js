@@ -18,7 +18,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 let player1, player2, platforms, cursors, isP1Jumping, isP2Jumping, rectangleP1M, rectangleP2M, rectangleP1A, rectangleP2A;
-var container;
+var container, timer, timerText;
 
 
 function preload() {
@@ -140,8 +140,36 @@ function takeDamage(playerBar, amount) {
     }
 }
 
+var countdown = 59; // initialize the countdown variable to 59 seconds
+
+function onTimerTick() {
+    if (countdown > 0) {
+        countdown -= 1; // decrease the countdown by 1
+        // update the timer text to display the new time
+        timerText.setText('00:' + (countdown < 10 ? '0' : '') + countdown);
+    }
+
+    // check if countdown is complete
+    if (countdown === 0) {
+        console.log("ROUND ENDED!");
+    }
+}
+
 function create() {
-    
+
+    // Timer text
+    timerText = this.add.text(game.config.width / 2, 100, '00:59', { fontSize: '48px', fill: '#FFF' });
+    timerText.setOrigin(0.5, 0.5); // center the text anchor point
+    timerText.setDepth(1);
+
+    // set up timer
+    timer = this.time.addEvent({
+        delay: 1000,
+        callback: onTimerTick,
+        callbackScope: this,
+        loop: true
+    });
+
     // Ernesto's animations
     this.anims.create({
         key: 'ernesto-idle',
@@ -428,8 +456,8 @@ function create() {
     player2_redBar.setCrop(0, 0, 485, 84);
     player2Health = 485;
 
-    
-    
+
+
     // player1.setSize(32, 32);
     // player2.setSize(64, 64);
 
@@ -481,7 +509,7 @@ function create() {
 
     // Jason Combo1 Hitbox
     rectJasonCombo1 = this.add.rectangle(player2.x, player2.y, 80, 40);
-    rectJasonCombo1.setOrigin(1.1,0.6);
+    rectJasonCombo1.setOrigin(1.1, 0.6);
     rectJasonCombo1.setStrokeStyle(1, 0x0000FF);
     this.physics.add.existing(rectJasonCombo1);
     rectJasonCombo1.body.allowGravity = false;
@@ -493,7 +521,7 @@ function create() {
 
     // Jason Arial1 Hitbox
     rectJasonArial1 = this.add.rectangle(player2.x, player2.y, 100, 60);
-    rectJasonArial1.setOrigin(0.9,-0.2);
+    rectJasonArial1.setOrigin(0.9, -0.2);
     rectJasonArial1.setStrokeStyle(1, 0xA020F0);
     this.physics.add.existing(rectJasonArial1);
     rectJasonArial1.body.allowGravity = false;
@@ -666,7 +694,7 @@ function update() {
             rectangleP2M.displayWidth = 170;
             player2.setVelocityX(0);
             if (P2facingLeft) {
-                rectJasonCombo1.setOrigin(1.1,0.6);
+                rectJasonCombo1.setOrigin(1.1, 0.6);
                 rectangleP2M.displayWidth = 170;
                 player2.anims.play('jason-combo-1-left', true);
                 if (player2.anims.currentFrame.index == 4 && boolJasonCombo1) {
@@ -677,7 +705,7 @@ function update() {
                     player1.setVelocityY(-70);
                 }
             } else {
-                rectJasonCombo1.setOrigin(-0.1,0.6);
+                rectJasonCombo1.setOrigin(-0.1, 0.6);
                 rectangleP2M.displayWidth = 170;
                 player2.anims.play('jason-combo-1-right', true);
                 if (player2.anims.currentFrame.index == 4 && boolJasonCombo1) {
@@ -708,7 +736,7 @@ function update() {
             rectJasonArial1.setStrokeStyle(1, 0xA020F0);
             rectangleP2M.displayWidth = 150;
             if (P2facingLeft) {
-                rectJasonArial1.setOrigin(0.9,-0.2);
+                rectJasonArial1.setOrigin(0.9, -0.2);
                 player2.anims.play('jason-arial-1-left', true);
                 if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
                     console.log('Kicks detected!');
@@ -718,7 +746,7 @@ function update() {
                     player1.setVelocityY(-100);
                 }
             } else {
-                rectJasonArial1.setOrigin(0.1,-0.2);
+                rectJasonArial1.setOrigin(0.1, -0.2);
                 player2.anims.play('jason-arial-1-right', true);
                 if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
                     console.log('Kicks detected!');
@@ -731,7 +759,7 @@ function update() {
         } else if (player2.body.velocity.x < 0) {
             if (this.c_Key.isDown) {
                 rectJasonArial1.setStrokeStyle(1, 0xA020F0);
-                rectJasonArial1.setOrigin(0.1,-0.2);
+                rectJasonArial1.setOrigin(0.1, -0.2);
                 rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-arial-1-right', true);
                 if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
@@ -748,7 +776,7 @@ function update() {
         } else if (player2.body.velocity.x > 0) {
             if (this.c_Key.isDown) {
                 rectJasonArial1.setStrokeStyle(1, 0xA020F0);
-                rectJasonArial1.setOrigin(0.9,-0.2);
+                rectJasonArial1.setOrigin(0.9, -0.2);
                 rectangleP2M.displayWidth = 150;
                 player2.anims.play('jason-arial-1-left', true);
                 if (player2.anims.currentFrame.index == 1 && boolJasonArial1) {
