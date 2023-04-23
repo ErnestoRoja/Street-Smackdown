@@ -78,6 +78,8 @@ export class main extends Phaser.Scene {
 
     preload() {
         this.countdown = 60;
+        this.player1Health = 485;
+        this.player2Health = 485;
 
         if (this.game.arena == 1) {
             this.load.image('city', 'assets/city-pixel.jpg');

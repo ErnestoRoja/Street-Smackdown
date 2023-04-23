@@ -19,7 +19,7 @@ export class menu extends Phaser.Scene {
         popupBg.setOrigin(0.5);
     
         // create the popup text
-        const P1popupText = this.add.text(1500, 400, 'Player 1 controls:\nWASD - move\nC - light attack\nV - heavy attack', {
+        const P1popupText = this.add.text(1500, 400, 'Player 1 controls:\nWASD - move\nC - light attack\nJump + C - ariel attack', {
           fontSize: '32px',
           fill: '#fff',
           align: 'center',
