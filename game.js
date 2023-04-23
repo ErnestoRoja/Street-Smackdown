@@ -1,29 +1,9 @@
 import { menu } from './states/menu.js';
-import { gameOver } from './states/gameOver.js';
 
-var config = {
-    type: Phaser.AUTO,
-    width: 1890,
-    height: 950,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 2000 },
-            debug: false
-        }
-    },
-    scene: {
-    }
-};
-
-var game = new Phaser.Game(config);
-game.scene.add('MainMenu', menu);
-game.scene.add('GameOver', gameOver);
-
-class main extends Phaser.Scene {
+export class main extends Phaser.Scene {
 
     constructor() {
-        super({ key: 'Main' });
+        super({ key: 'main' });
         this.player1 = null;
         this.player2 = null;
         this.platforms = null;
@@ -499,8 +479,8 @@ class main extends Phaser.Scene {
         this.physics.add.collider(this.rectangleP1M, this.platforms);
         this.physics.add.collider(this.rectangleP2M, this.platforms);
 
-        this.physics.add.overlap(this.rectangleP1M, this.rectangleP2M, function () {
-            console.log('Kisses detected! -> p1 health: ' + this.player1Health + ', p2 health: ' + this.player2Health);
+        this.physics.add.overlap(this.rectangleP1M, this.rectangleP2M, () => {
+            //console.log('Kisses detected! -> p1 health: ' + this.player1Health + ', p2 health: ' + this.player2Health);
         });
 
         // Ernesto Combo1 Hitbox
@@ -510,8 +490,7 @@ class main extends Phaser.Scene {
         this.physics.add.existing(this.rectErnestoCombo1);
         this.rectErnestoCombo1.body.allowGravity = false;
 
-        this.boolErnestoCombo1 = false;
-        this.physics.add.overlap(this.rectErnestoCombo1, this.rectangleP2M, function () {
+        this.physics.add.overlap(this.rectErnestoCombo1, this.rectangleP2M, () => {
             this.boolErnestoCombo1 = true;
         });
 
@@ -522,8 +501,7 @@ class main extends Phaser.Scene {
         this.physics.add.existing(this.rectErnestoCombo2);
         this.rectErnestoCombo2.body.allowGravity = false;
 
-        this.boolErnestoCombo2 = false;
-        this.physics.add.overlap(this.rectErnestoCombo2, this.rectangleP2M, function () {
+        this.physics.add.overlap(this.rectErnestoCombo2, this.rectangleP2M, () => {
             this.boolErnestoCombo2 = true;
         });
 
@@ -534,8 +512,7 @@ class main extends Phaser.Scene {
         this.physics.add.existing(this.rectJasonCombo1);
         this.rectJasonCombo1.body.allowGravity = false;
 
-        this.boolJasonCombo1 = false;
-        this.physics.add.overlap(this.rectJasonCombo1, this.rectangleP1M, function () {
+        this.physics.add.overlap(this.rectJasonCombo1, this.rectangleP1M, () => {
             this.boolJasonCombo1 = true;
         });
 
@@ -546,8 +523,7 @@ class main extends Phaser.Scene {
         this.physics.add.existing(this.rectJasonArial1);
         this.rectJasonArial1.body.allowGravity = false;
 
-        this.boolJasonArial1 = false;
-        this.physics.add.overlap(this.rectJasonArial1, this.rectangleP1M, function () {
+        this.physics.add.overlap(this.rectJasonArial1, this.rectangleP1M, () => {
             this.boolJasonArial1 = true;
         });
     }
@@ -589,7 +565,6 @@ class main extends Phaser.Scene {
                     this.rectangleP1M.displayWidth = 380;
                     this.player1.anims.play('ernesto-combo-2-left', true);
                     if (this.player1.anims.currentFrame.index == 3 && this.boolErnestoCombo2) {
-                        console.log('Sword (lol) detected!');
                         this.takeDamage(this.player2_redBar, 5);
                         this.boolErnestoCombo2 = false;
                         this.player2.setVelocityX(-500);
@@ -600,7 +575,6 @@ class main extends Phaser.Scene {
                     this.rectangleP1M.displayWidth = 380;
                     this.player1.anims.play('ernesto-combo-2-right', true);
                     if (this.player1.anims.currentFrame.index == 3 && this.boolErnestoCombo2) {
-                        console.log('Sword (lol) detected!');
                         this.takeDamage(this.player2_redBar, 5);
                         this.boolErnestoCombo2 = false;
                         this.player2.setVelocityX(500);
@@ -616,7 +590,6 @@ class main extends Phaser.Scene {
                     this.rectangleP1M.displayWidth = 380;
                     this.player1.anims.play('ernesto-combo-1-left', true);
                     if (this.player1.anims.currentFrame.index == 9 && this.boolErnestoCombo1) {
-                        console.log('Sword (lol) detected!');
                         this.takeDamage(this.player2_redBar, 15);
                         this.boolErnestoCombo1 = false;
                         this.player2.setVelocityX(-1200);
@@ -627,7 +600,6 @@ class main extends Phaser.Scene {
                     this.rectangleP1M.displayWidth = 380;
                     this.player1.anims.play('ernesto-combo-1-right', true);
                     if (this.player1.anims.currentFrame.index == 9 && this.boolErnestoCombo1) {
-                        console.log('Sword (lol) detected!');
                         this.takeDamage(this.player2_redBar, 15);
                         this.boolErnestoCombo1 = false;
                         this.player2.setVelocityX(1200);
@@ -713,7 +685,6 @@ class main extends Phaser.Scene {
                     this.rectangleP2M.displayWidth = 170;
                     this.player2.anims.play('jason-combo-1-left', true);
                     if (this.player2.anims.currentFrame.index == 4 && this.boolJasonCombo1) {
-                        console.log('Punches detected!');
                         this.takeDamage(this.player1_redBar, 7);
                         this.boolJasonCombo1 = false;
                         this.player1.setVelocityX(-500);
@@ -724,7 +695,6 @@ class main extends Phaser.Scene {
                     this.rectangleP2M.displayWidth = 170;
                     this.player2.anims.play('jason-combo-1-right', true);
                     if (this.player2.anims.currentFrame.index == 4 && this.boolJasonCombo1) {
-                        console.log('Punches detected!');
                         this.takeDamage(this.player1_redBar, 7);
                         this.boolJasonCombo1 = false;
                         this.player1.setVelocityX(500);
@@ -754,7 +724,6 @@ class main extends Phaser.Scene {
                     this.rectJasonArial1.setOrigin(0.9, -0.2);
                     this.player2.anims.play('jason-arial-1-left', true);
                     if (this.player2.anims.currentFrame.index == 1 && this.boolJasonArial1) {
-                        console.log('Kicks detected!');
                         this.takeDamage(this.player1_redBar, 8);
                         this.boolJasonArial1 = false;
                         this.player1.setVelocityX(-600);
@@ -764,7 +733,6 @@ class main extends Phaser.Scene {
                     this.rectJasonArial1.setOrigin(0.1, -0.2);
                     this.player2.anims.play('jason-arial-1-right', true);
                     if (this.player2.anims.currentFrame.index == 1 && this.boolJasonArial1) {
-                        console.log('Kicks detected!');
                         this.takeDamage(this.player1_redBar, 8);
                         this.boolJasonArial1 = false;
                         this.player1.setVelocityX(600);
@@ -778,7 +746,6 @@ class main extends Phaser.Scene {
                     this.rectangleP2M.displayWidth = 150;
                     this.player2.anims.play('jason-arial-1-right', true);
                     if (this.player2.anims.currentFrame.index == 1 && this.boolJasonArial1) {
-                        console.log('Kicks detected!');
                         this.takeDamage(this.player1_redBar, 8);
                         this.boolJasonArial1 = false;
                         this.player1.setVelocityX(600);
@@ -795,7 +762,6 @@ class main extends Phaser.Scene {
                     this.rectangleP2M.displayWidth = 150;
                     this.player2.anims.play('jason-arial-1-left', true);
                     if (this.player2.anims.currentFrame.index == 1 && this.boolJasonArial1) {
-                        console.log('Kicks detected!');
                         this.takeDamage(this.player1_redBar, 8);
                         this.boolJasonArial1 = false;
                         this.player1.setVelocityX(-600);
@@ -820,5 +786,18 @@ class main extends Phaser.Scene {
     }
 }
 
-game.scene.add('Main', main);
-game.scene.start('Main');
+var config = {
+    type: Phaser.AUTO,
+    width: 1890,
+    height: 950,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 2000 },
+            debug: false
+        }
+    },
+    scene: [menu, main, gameOver]
+};
+var game = new Phaser.Game(config);
+this.game.add('menu', menu);
