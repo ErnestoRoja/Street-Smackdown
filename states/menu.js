@@ -54,8 +54,6 @@ export class menu extends Phaser.Scene {
       }
 
     create() {
-        console.log("IN MENU");
-
         this.add.image(945, 475, 'menu');
         this.title = this.add.text(345 , 100, 'Street Smackdown', { fontSize: '128px', fill: '#d2752d', stroke: '#000', strokeThickness: 10 })
         this.playButton = this.add.text(880 , 350, 'Play', { fontSize: '64px', fill: '#FFF', stroke: '#000', strokeThickness: 10 });
@@ -68,7 +66,7 @@ export class menu extends Phaser.Scene {
         this.exitButton.setInteractive();
 
         this.playButton.on('pointerdown', function () {
-            this.scene.start('main');
+            this.scene.start('mapSelection');
         }, this);
 
         this.controlButton.on('pointerdown', function () {

@@ -1,4 +1,6 @@
 import { menu } from './states/menu.js';
+import { gameOver } from './states/gameOver.js';
+import { mapSelection } from './states/mapSelection.js';
 
 export class main extends Phaser.Scene {
 
@@ -30,22 +32,27 @@ export class main extends Phaser.Scene {
         this.P1facingRight = true;
         this.P2facingLeft = false;
         this.P2facingRight = true;
-        this.countdown = 60;
-
+        this.countdown = 7;
+        this.winner = null;
+        this.map = null;
     }
 
     onTimerTick() {
         if (this.countdown > 0) {
-            this.countdown -= 1; // decrease the countdown by 1
-            // update the timer text to display the new time
+            this.countdown -= 1;
             this.timerText.setText('0:' + (this.countdown < 10 ? '0' : '') + this.countdown);
         }
-
-        // check if countdown is complete
         if (this.countdown === 0) {
-            // if (this.player1Health >= this.player2Health) {
-
-            // }
+            // Left player wins
+            if (this.player1Health >= this.player2Health) {
+                this.winner = false;
+                this.scene.start('gameOver', { winner: this.winner});
+            // Left player loses
+            } else {
+                this.winner = true;
+                this.scene.start('gameOver', { winner: this.winner });
+            }
+            
         }
     }
 
@@ -164,8 +171,6 @@ export class main extends Phaser.Scene {
     }
 
     create() {
-        console.log("IN GAME");
-
         // Timer text
         this.timerText = this.add.text(game.config.width / 2, 100, '1:00', { fontSize: '48px', fill: '#FFF', stroke: '#000', strokeThickness: 10 });
         this.timerText.setOrigin(0.5, 0.5); // center the text anchor point
@@ -443,21 +448,21 @@ export class main extends Phaser.Scene {
         this.player2 = this.physics.add.sprite(400, 700, 'jason-idle').setScale(1);
         this.player2.setCollideWorldBounds(true);
 
-        this.player1_emptyBar = this.add.sprite(450, 100, 'empty-health');
+        this.player1_emptyBar = this.add.sprite(1435, 100, 'empty-health');
         this.player1_emptyBar.displayHeight = 60;
         this.player1_emptyBar.displayWidth = 800;
 
-        this.player1_redBar = this.add.sprite(450, 100, 'red-health');
+        this.player1_redBar = this.add.sprite(1435, 100, 'red-health');
         this.player1_redBar.displayHeight = 50;
         this.player1_redBar.displayWidth = 785;
 
         this.player1_redBar.setCrop(0, 0, 485, 84);
 
-        this.player2_emptyBar = this.add.sprite(1435, 100, 'empty-health');
+        this.player2_emptyBar = this.add.sprite(450, 100, 'empty-health');
         this.player2_emptyBar.displayHeight = 60;
         this.player2_emptyBar.displayWidth = 800;
 
-        this.player2_redBar = this.add.sprite(1435, 100, 'red-health');
+        this.player2_redBar = this.add.sprite(450, 100, 'red-health');
         this.player2_redBar.displayHeight = 50;
         this.player2_redBar.displayWidth = 785;
 
@@ -798,6 +803,6 @@ var config = {
             debug: false
         }
     },
-    scene: [menu, main, gameOver]
+    scene: [menu, mapSelection, main, gameOver]
 };
 var game = new Phaser.Game(config);
