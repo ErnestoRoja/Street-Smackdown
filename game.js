@@ -43,7 +43,9 @@ export class main extends Phaser.Scene {
 
         // check if countdown is complete
         if (this.countdown === 0) {
-            console.log("ROUND ENDED!");
+            // if (this.player1Health >= this.player2Health) {
+
+            // }
         }
     }
 
@@ -435,10 +437,10 @@ export class main extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.platform = this.platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
 
-        this.player1 = this.physics.add.sprite(400, 700, 'ernesto-all').setScale(1);
+        this.player1 = this.physics.add.sprite(1450, 700, 'ernesto-all').setScale(1);
         this.player1.setCollideWorldBounds(true);
 
-        this.player2 = this.physics.add.sprite(800, 700, 'jason-idle').setScale(1);
+        this.player2 = this.physics.add.sprite(400, 700, 'jason-idle').setScale(1);
         this.player2.setCollideWorldBounds(true);
 
         this.player1_emptyBar = this.add.sprite(450, 100, 'empty-health');
@@ -480,7 +482,6 @@ export class main extends Phaser.Scene {
         this.physics.add.collider(this.rectangleP2M, this.platforms);
 
         this.physics.add.overlap(this.rectangleP1M, this.rectangleP2M, () => {
-            //console.log('Kisses detected! -> p1 health: ' + this.player1Health + ', p2 health: ' + this.player2Health);
         });
 
         // Ernesto Combo1 Hitbox
@@ -800,4 +801,3 @@ var config = {
     scene: [menu, main, gameOver]
 };
 var game = new Phaser.Game(config);
-this.game.add('menu', menu);
