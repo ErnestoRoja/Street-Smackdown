@@ -32,8 +32,7 @@ export class main extends Phaser.Scene {
         this.P1facingRight = true;
         this.P2facingLeft = false;
         this.P2facingRight = true;
-        this.countdown = 7;
-        this.winner = null;
+        this.countdown = 60;
         this.map = null;
     }
 
@@ -42,15 +41,16 @@ export class main extends Phaser.Scene {
             this.countdown -= 1;
             this.timerText.setText('0:' + (this.countdown < 10 ? '0' : '') + this.countdown);
         }
-        if (this.countdown === 0) {
+        if (this.countdown <= 0) {
             // Left player wins
-            if (this.player1Health >= this.player2Health) {
-                this.winner = false;
-                this.scene.start('gameOver', { winner: this.winner});
+            if (this.player1Health > this.player2Health) {
+                // Player 1 is technically the guy on the right lol
+                this.game.winner = 2;
+                this.scene.start('gameOver');
             // Left player loses
             } else {
-                this.winner = true;
-                this.scene.start('gameOver', { winner: this.winner });
+                this.game.winner = 1;
+                this.scene.start('gameOver');
             }
             
         }
@@ -59,16 +59,34 @@ export class main extends Phaser.Scene {
     takeDamage(playerBar, amount) {
         if (playerBar == this.player1_redBar) {
             this.player1Health -= amount;
+            if (this.player1Health <= 0) {
+                // Player 1 is technically the guy on the right lol
+                this.game.winner = 1;
+                this.scene.start('gameOver');
+            }
             this.player1_redBar.setCrop(0, 0, this.player1Health, 84);
         } else {
             this.player2Health -= amount;
+            if (this.player2Health <= 0) {
+                // Player 1 is technically the guy on the right lol
+                this.game.winner = 2;
+                this.scene.start('gameOver');
+            }
             this.player2_redBar.setCrop(0, 0, this.player2Health, 84);
         }
     }
 
     preload() {
-        this.load.image('city', 'assets/city-pixel.jpg');
-        this.load.image('city-ground', 'assets/city-ground.jpg');
+        this.countdown = 60;
+
+        if (this.game.arena == 1) {
+            this.load.image('city', 'assets/city-pixel.jpg');
+            this.load.image('city-ground', 'assets/city-ground.jpg');
+        }
+        else if (this.game.arena == 2) {
+            this.load.image('island', 'assets/arena-island.png');
+            this.load.image('island-ground', 'assets/arena-island-ground.png');
+        }
         this.load.image('red-health', 'assets/Health/red-health.png');
         this.load.image('empty-health', 'assets/Health/empty-health.png');
         this.load.spritesheet('dude-1-run-right',
@@ -437,10 +455,15 @@ export class main extends Phaser.Scene {
         this.s_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.d_Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
-        this.add.image(945, 475, 'city');
-
         this.platforms = this.physics.add.staticGroup();
-        this.platform = this.platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
+        if (this.game.arena == 1) {
+            this.add.image(945, 475, 'city');
+            this.platform = this.platforms.create(950, 910, 'city-ground').setScale(1).refreshBody();
+        }
+        else if (this.game.arena == 2) {
+            this.add.image(945, 533, 'island');
+            this.platform = this.platforms.create(945, 994, 'island-ground').setScale(1).refreshBody();
+        }
 
         this.player1 = this.physics.add.sprite(1450, 700, 'ernesto-all').setScale(1);
         this.player1.setCollideWorldBounds(true);
@@ -540,6 +563,7 @@ export class main extends Phaser.Scene {
         this.rectangleP1M.x = this.player1.x;
         this.rectangleP1M.y = this.player1.y;
         this.rectangleP1M.displayWidth = 150;
+        this.rectangleP1M.setStrokeStyle(0);
 
         // Combo1 Hitbox
         this.rectErnestoCombo1.x = this.player1.x;
@@ -565,7 +589,7 @@ export class main extends Phaser.Scene {
                 this.P1facingLeft = false;
             } else if (this.k_Key.isDown) {
                 this.player1.setVelocityX(0);
-                this.rectErnestoCombo2.setStrokeStyle(1, 0x0000FF);
+                //this.rectErnestoCombo2.setStrokeStyle(1, 0x0000FF);
                 if (this.P1facingLeft) {
                     this.rectErnestoCombo2.setOrigin(1, 0.7);
                     this.rectangleP1M.displayWidth = 380;
@@ -590,7 +614,7 @@ export class main extends Phaser.Scene {
             }
             else if (this.l_Key.isDown) {
                 this.player1.setVelocityX(0);
-                this.rectErnestoCombo1.setStrokeStyle(1, 0x0000FF);
+                //this.rectErnestoCombo1.setStrokeStyle(1, 0x0000FF);
                 if (this.P1facingLeft) {
                     this.rectErnestoCombo1.setOrigin(0.85, 0.5);
                     this.rectangleP1M.displayWidth = 380;
@@ -655,10 +679,10 @@ export class main extends Phaser.Scene {
         this.rectangleP2M.x = this.player2.x;
         this.rectangleP2M.y = this.player2.y;
         this.rectangleP2M.displayWidth = 100;
-        //rectangleP2M.displayWidth = 150;
+        this.rectangleP2M.setStrokeStyle(0);
 
         // Combo1 Hitbox
-        this. rectJasonCombo1.x = this.player2.x;
+        this.rectJasonCombo1.x = this.player2.x;
         this.rectJasonCombo1.y = this.player2.y;
         this.rectJasonCombo1.setStrokeStyle(0, 0x0000FF);
 
@@ -683,7 +707,7 @@ export class main extends Phaser.Scene {
                 this.P2facingRight = true;
                 this.P2facingLeft = false;
             } else if (this.c_Key.isDown) {
-                this.rectJasonCombo1.setStrokeStyle(1, 0x0000FF);
+                //this.rectJasonCombo1.setStrokeStyle(1, 0x0000FF);
                 this.rectangleP2M.displayWidth = 170;
                 this.player2.setVelocityX(0);
                 if (this.P2facingLeft) {
@@ -724,7 +748,7 @@ export class main extends Phaser.Scene {
             this.isP2Jumping = true;
             this.rectangleP2M.displayWidth = 100;
             if (this.c_Key.isDown) {
-                this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+                //this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
                 this.rectangleP2M.displayWidth = 150;
                 if (this.P2facingLeft) {
                     this.rectJasonArial1.setOrigin(0.9, -0.2);
@@ -747,7 +771,7 @@ export class main extends Phaser.Scene {
                 }
             } else if (this.player2.body.velocity.x < 0) {
                 if (this.c_Key.isDown) {
-                    this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+                    //this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
                     this.rectJasonArial1.setOrigin(0.1, -0.2);
                     this.rectangleP2M.displayWidth = 150;
                     this.player2.anims.play('jason-arial-1-right', true);
@@ -763,7 +787,7 @@ export class main extends Phaser.Scene {
                 }
             } else if (this.player2.body.velocity.x > 0) {
                 if (this.c_Key.isDown) {
-                    this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
+                    //this.rectJasonArial1.setStrokeStyle(1, 0xA020F0);
                     this.rectJasonArial1.setOrigin(0.9, -0.2);
                     this.rectangleP2M.displayWidth = 150;
                     this.player2.anims.play('jason-arial-1-left', true);
